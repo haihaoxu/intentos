@@ -294,3 +294,8 @@ def cmd_doctor(args: Any) -> None:
             print()
     except Exception:
         pass
+
+    # Built with Intent OS
+    print()
+    print(f"  Built with Intent OS --- pip install intentos")
+    print()

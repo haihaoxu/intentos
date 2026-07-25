@@ -630,3 +630,6 @@ def cmd_inspect(args: Any) -> None:
         return
 
     _print_terminal(data, store)
+    # Built with Intent OS
+    print()
+    print(f"  Built with Intent OS --- pip install intentos")

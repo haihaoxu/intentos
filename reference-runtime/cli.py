@@ -36,6 +36,7 @@ import commands.prune
 import commands.db
 import commands.feedback
 import commands.memory
+import commands.share
 
 # All cmd_* functions are imported from command modules via the registry pattern below
 CMD_MAP = {
@@ -68,6 +69,7 @@ CMD_MAP = {
     "db": commands.db.cmd_db,
     "feedback": commands.feedback.cmd_feedback,
     "memory": commands.memory.cmd_memory,
+    "share": commands.share.cmd_share,
 }
 
 def build_parser() -> argparse.ArgumentParser:
@@ -652,6 +654,15 @@ def build_parser() -> argparse.ArgumentParser:
     mem_prune.add_argument("--dry-run", action="store_true",
                            help="Show what would be deleted without deleting")
     mem_prune.set_defaults(func=CMD_MAP["memory"])
+
+    # share
+    share_parser = subparsers.add_parser("share",
+        help="Generate a shareable Markdown summary of an agent")
+    share_parser.add_argument("agent_id", help="Agent ID to summarize")
+    share_parser.add_argument("--format", default="markdown",
+                              choices=["markdown"],
+                              help="Output format (default: markdown)")
+    share_parser.set_defaults(func=CMD_MAP["share"])
 
     # db
     db_parser = subparsers.add_parser("db",
