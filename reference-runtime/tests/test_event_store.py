@@ -311,6 +311,51 @@ class TestExecutionRecords:
         assert "rec-2" in traces
 
 
+class TestEventOnlyTraces:
+    """Traces captured by the proxy have events but no execution record.
+
+    ``get_all_trace_ids`` read ``execution_records`` alone, so everything the
+    proxy recorded was invisible to ``inspect`` — the command the README tells
+    you to run after ``proxy start``.
+    """
+
+    def setup_method(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.db_path = os.path.join(self.tmpdir, "event_only_test.db")
+        self.store = EventStore(self.db_path)
+
+    def teardown_method(self):
+        self.store.close()
+        if os.path.exists(self.db_path):
+            try:
+                os.unlink(self.db_path)
+            except PermissionError:
+                pass
+
+    def test_event_only_trace_is_listed(self):
+        self.store.save_event(_make_event(
+            event_type=EventType.LLM_CALL,
+            trace_id="proxy-abc123",
+            sequence=1,
+            capability=None,
+            runtime="proxy",
+        ))
+        assert "proxy-abc123" in self.store.get_all_trace_ids()
+
+    def test_events_and_records_are_both_listed(self):
+        self.store.save_event(_make_event(
+            event_type=EventType.LLM_CALL,
+            trace_id="proxy-abc123",
+            sequence=1,
+            capability=None,
+            runtime="proxy",
+        ))
+        self.store.save_execution_record(_make_execution_record(trace_id="rec-only"))
+        traces = self.store.get_all_trace_ids()
+        assert "proxy-abc123" in traces
+        assert "rec-only" in traces
+
+
 # ──────────────────────────────────────────────
 # Tests: Aggregation
 # ──────────────────────────────────────────────

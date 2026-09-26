@@ -24,7 +24,7 @@ def cmd_event(args: Any) -> None:
     if args.action == "list":
         event_count = store.get_event_count()
         record_count = store.get_record_count()
-        print(f"Event Store: ~/.intent-os/events.db")
+        print("Event Store: ~/.intent-os/intent.db")
         print(f"  Events: {event_count}")
         print(f"  Execution records: {record_count}")
         if record_count > 0:

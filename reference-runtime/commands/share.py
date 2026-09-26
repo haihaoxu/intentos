@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 
-_INTENT_OS_TAG = "\n\n---\n*Built with [Intent OS](https://github.com/haihaoxu/intentos) — pip install intentos*"
+_INTENT_OS_TAG = "\n\n---\n*Built with [Intent OS](https://github.com/haihaoxu/intentos)*"
 
 
 def cmd_share(args: Any) -> None:

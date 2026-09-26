@@ -390,6 +390,19 @@ def _print_related_experiences(record: dict[str, Any] | None, events: list[dict[
     print()
 
 
+def _as_dict(value: Any) -> dict[str, Any]:
+    """Return *value* as a dict, tolerating the JSON strings SQLite hands back."""
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except (json.JSONDecodeError, TypeError):
+            return {}
+        return parsed if isinstance(parsed, dict) else {}
+    return {}
+
+
 def _print_terminal(data: dict[str, Any], store: Any = None) -> None:
     """Render trace to terminal (default output)."""
     trace_id = data["trace_id"]
@@ -401,6 +414,24 @@ def _print_terminal(data: dict[str, Any], store: Any = None) -> None:
     print("    Agent Flight Recorder - Execution Trace")
     print("  ================================================")
     print()
+
+    # A proxy-captured trace has events but no execution record, so these have
+    # to exist independently of `record` — otherwise the Timeline section below
+    # raises UnboundLocalError for every trace the proxy ever recorded. The
+    # values are summed from the LlmCall events so the numbers are real.
+    latency = 0.0
+    cost = 0.0
+    tokens = 0
+    error = None
+    if record is None:
+        for evt in events:
+            metrics = _as_dict(evt.get("metrics"))
+            latency += metrics.get("latency_ms") or 0.0
+            cost += metrics.get("cost_usd") or 0.0
+            tokens += _as_dict(metrics.get("token_count")).get("total") or 0
+            payload = _as_dict(evt.get("payload"))
+            if error is None and payload.get("status") == "failure":
+                error = payload.get("error")
 
     # Identity section
     if record:
@@ -632,4 +663,4 @@ def cmd_inspect(args: Any) -> None:
     _print_terminal(data, store)
     # Built with Intent OS
     print()
-    print(f"  Built with Intent OS --- pip install intentos")
+    print("  Built with Intent OS --- github.com/haihaoxu/intentos")

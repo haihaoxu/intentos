@@ -297,5 +297,5 @@ def cmd_doctor(args: Any) -> None:
 
     # Built with Intent OS
     print()
-    print(f"  Built with Intent OS --- pip install intentos")
+    print("  Built with Intent OS --- github.com/haihaoxu/intentos")
     print()

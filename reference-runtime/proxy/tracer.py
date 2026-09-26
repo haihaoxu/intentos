@@ -15,7 +15,6 @@ import os
 import time
 import uuid
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
 from core.event_store import EventStore, Event
@@ -76,9 +75,10 @@ class AgentTracer:
 
     def __init__(self, store: EventStore | None = None) -> None:
         if store is None:
-            store_dir = Path.home() / ".intent-os"
-            store_dir.mkdir(parents=True, exist_ok=True)
-            store = EventStore(str(store_dir / "events.db"))
+            # No explicit path: EventStore defaults to the unified store, which is
+            # what every reader already opens. Pointing this at a separate file
+            # made captured traffic invisible to `inspect` and `proxy doctor`.
+            store = EventStore()
         self._store = store
         self._trace_id: str | None = None
         # Phase C: auto-extraction counters

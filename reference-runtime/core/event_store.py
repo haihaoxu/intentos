@@ -804,10 +804,25 @@ class EventStore:
     # ── Legacy query interface ──
 
     def get_all_trace_ids(self) -> list[str]:
-        """List all trace IDs in the store."""
+        """List every trace ID in the store, most recently active first.
+
+        Unions events with execution records. Proxy traffic is captured as
+        ``LlmCall`` events and has no execution record, so reading
+        ``execution_records`` alone made everything the proxy recorded
+        invisible to ``inspect`` — the command the README tells you to use
+        after ``proxy start``.
+        """
         conn = self._get_conn()
         cursor = conn.execute(
-            "SELECT DISTINCT trace_id FROM execution_records ORDER BY created_at DESC"
+            """
+            SELECT trace_id, MAX(ts) AS last_seen FROM (
+                SELECT trace_id, COALESCE(created_at, timestamp) AS ts FROM events
+                UNION ALL
+                SELECT trace_id, created_at AS ts FROM execution_records
+            )
+            GROUP BY trace_id
+            ORDER BY last_seen DESC
+            """
         )
         return [row["trace_id"] for row in cursor.fetchall()]
 
