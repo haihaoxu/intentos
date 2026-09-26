@@ -168,6 +168,23 @@ def _compute_digest(raw_yaml: str) -> str:
     return "sha256:" + hashlib.sha256(raw_yaml.encode("utf-8")).hexdigest()
 
 
+def is_path(source: str | Path) -> bool:
+    """Whether *source* names an existing file rather than holding YAML text.
+
+    ``Path.exists()`` raises ``OSError`` with ``ENAMETOOLONG`` on POSIX when the
+    string is longer than the filesystem's name limit. Raw YAML content is the
+    documented alternative to a path, and is routinely longer than that limit,
+    so the check has to tolerate failure instead of propagating it. Windows
+    returns ``False`` here, which is why this only breaks on Linux.
+    """
+    if isinstance(source, Path):
+        return True
+    try:
+        return Path(source).exists()
+    except (OSError, ValueError):
+        return False
+
+
 def parse_manifest(source: str | Path) -> tuple[CapabilityManifest, ValidationResult]:
     """
     Parse a Capability Manifest from a YAML file or string.
@@ -185,7 +202,7 @@ def parse_manifest(source: str | Path) -> tuple[CapabilityManifest, ValidationRe
     warnings: list[ValidationError] = []
 
     # Read input
-    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+    if is_path(source):
         path = Path(source)
         raw_yaml = path.read_text(encoding="utf-8")
     else:

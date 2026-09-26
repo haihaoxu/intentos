@@ -15,6 +15,7 @@ from typing import Any
 
 import yaml
 
+from core.parser import is_path
 from core.workflow import (
     ExecutionSemantics,
     FailurePolicy,
@@ -61,7 +62,7 @@ def parse_workflow_yaml(source: str | Path) -> WorkflowSpec:
         WorkflowParseError: If the YAML is invalid or validation fails.
     """
     # Read input
-    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+    if is_path(source):
         path = Path(source)
         raw_yaml = path.read_text(encoding="utf-8")
     else:
@@ -372,7 +373,7 @@ def workflow_yaml_to_dict(source: str | Path) -> dict[str, Any]:
 
     Useful for quick inspection.
     """
-    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+    if is_path(source):
         path = Path(source)
         raw_yaml = path.read_text(encoding="utf-8")
     else:
