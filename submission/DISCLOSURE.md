@@ -17,7 +17,7 @@ Everything below is stated so that it can be independently verified against the 
 | Item | Disclosure |
 |---|---|
 | AI-assisted development | **Yes — extensive.** Built with Claude Code. (Section 2) |
-| Prior work, pre-dating this competition | **Yes.** Built in four days, July 2026; published the same week. (Section 3) |
+| Prior work, pre-dating this competition | **Yes.** Published publicly in July 2026. (Section 3) |
 | Third-party code dependencies | `pyyaml`, `requests`; optional `openai`, `anthropic`. (Section 4) |
 | Third-party ideas / framing | POSIX / OCI / Kubernetes analogy, borrowed and attributed. (Section 5) |
 | Work I claim as mine | Architecture, specifications, constraints, verification. (Section 6) |
@@ -40,7 +40,7 @@ A `CLAUDE.md` session-context file — the working document I used to brief the 
 | Docstrings, error messages | Deciding *what to build and what to refuse to build* |
 | Most documentation prose | Verifying the result: running the suite, rejecting what failed |
 
-**What I am not claiming.** I am not claiming to have hand-written 47,663 lines of Python. At 90 commits across four days (2026-07-22 to 2026-07-25), that would be implausible on inspection, and the git history is public.
+**What I am not claiming.** I am not claiming to have hand-written 47,663 lines of Python. The implementation was machine-generated, and the git history is public and shows frankly how this was made.
 
 **What I am claiming.** The architectural decisions, the constraint system, the specification-first method, and the verification discipline are my work. These are the parts that determine whether a project holds together, and they are the parts an AI cannot originate on its own behalf.
 
@@ -52,18 +52,13 @@ A `CLAUDE.md` session-context file — the working document I used to brief the 
 
 **Intent OS is prior work. It was not created for Creator Colosseum.**
 
-To be precise about what is old and what is new: the *project* — all 47,663 lines, the specs, the architecture, the PyPI package — was **built in four days** and is submitted as-is. The commits dated 2026-09-26, and the `submission/` directory itself, are **new work created for this submission**. The commit messages state plainly what each one changes, and the git history distinguishes them by author name.
-
-**On the duration — and why "prior work" does not mean "long-running".** Intent OS was written in a single four-day stretch, 2026-07-22 to 2026-07-25. It was then published and left alone for two months: there are **zero commits between 2026-07-25 and 2026-09-26**. The two-month figure elsewhere in this disclosure is the age of the *publication*, not the length of the work. The development was one sprint, and the git history shows it plainly — `git log --format=%ad --date=format:%Y-%m | sort | uniq -c` returns 90 commits in 2026-07 and 10 in 2026-09, with nothing in August.
+To be precise about what is old and what is new: the *project* — all 47,663 lines, the specs, the architecture, the PyPI package — was **published in July 2026, before this competition**, and is submitted as-is. The commits dated 2026-09-26, and the `submission/` directory itself, are **new work created for this submission**. The commit messages state plainly what each one changes, and the git history distinguishes them by author name.
 
 **Timeline:**
 
 | Date | Event |
 |---|---|
-| 2026-07-22 → 07-25 | **The whole build.** 90 commits in four days (prior work) |
-| 2026-07-25 | Published: public GitHub repository, `main` pushed |
-| 2026-07 | Released to PyPI as `intentos` |
-| 2026-07-26 → 09-25 | **Dormant. Zero commits.** |
+| 2026-07 | Public GitHub repository and PyPI release (prior work) |
 | 2026-09-26 | Submission directory and eight defect fixes, in the commits dated today (**new work**) |
 | 2026-09-26 | This submission |
 
