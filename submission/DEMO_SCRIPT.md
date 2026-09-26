@@ -19,11 +19,13 @@ intent-os inspect latest
 
 **Order matters.** Run `demo --auto` *before* `inspect latest`. The demo writes the trace that `inspect latest` then reads. If you run `inspect latest` first on a clean machine, you get `No traces found` — do not film that.
 
-**Clean-machine check.** To reproduce what a judge sees, isolate state:
+**Clean-machine check.** To reproduce what a judge sees on a first run, isolate the state directory. `USERPROFILE` must be a Windows-style path, not a POSIX one:
 
 ```bash
-HOME=/tmp/fresh-demo USERPROFILE=/tmp/fresh-demo intent-os demo --auto
+HOME=/c/tmp/fresh-demo USERPROFILE='C:\tmp\fresh-demo' intent-os demo --auto
 ```
+
+(Verification on 2026-09-26: this exact command produced the trace shown in Shot 3, from an otherwise empty state directory.)
 
 ---
 
@@ -58,7 +60,7 @@ intent-os demo --auto
 Let the demo's opening lines render, then cut.
 
 **Voiceover:**
-> This is Intent OS. It's open source, it's on PyPI, and it needs no API key to try.
+> This is Intent OS. It's open source, it needs no API key, and everything you're about to see runs on your own machine.
 
 ---
 

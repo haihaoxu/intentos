@@ -35,7 +35,7 @@ A `CLAUDE.md` session-context file — the working document I used to brief the 
 | Machine-generated | Mine |
 |---|---|
 | Most implementation code | The four constitutional constraints (R1–R4) |
-| Most test bodies | The ten frozen specifications (`specs/SPEC-0001`–`SPEC-0010`) |
+| Most test bodies | The ten specifications (`specs/SPEC-0001`–`SPEC-0010`) |
 | Boilerplate, CLI plumbing | The product boundary ("does not standardize intelligence") |
 | Docstrings, error messages | Deciding *what to build and what to refuse to build* |
 | Most documentation prose | Verifying the result: running the suite, rejecting what failed |
@@ -64,7 +64,7 @@ To be precise about what is old and what is new: the *project* — all 47,663 li
 
 **How to verify:**
 
-- **Git history** — the repository is public. `git log` shows 90 commits authored `Intent OS` dated 2026-07-22 through 2026-07-25, all pre-dating this competition, plus the commits dated 2026-09-26 authored `Haihao Xu` — count them with `git log --since=2026-09-26`.
+- **Git history** — the repository is public. `git log` shows 90 commits authored `Intent OS` dated 2026-07-22 through 2026-07-25, all pre-dating this competition, plus the commits dated 2026-09-26 authored `Haihao Xu` — count them with `git log --since=2026-09-25`.
 - **PyPI release dates** — `intentos` has been publicly installable since July 2026: https://pypi.org/project/intentos/
 - **Docs site** — https://haihaoxu.github.io/intentos/ has been live since July 2026.
 
@@ -85,7 +85,7 @@ To be precise about what is old and what is new: the *project* — all 47,663 li
 | `ROADMAP.md` | Development roadmap |
 | `HN_POST.md` | Launch post draft |
 | `CHANGELOG.md` | Version history |
-| `specs/SPEC-0001`–`SPEC-0010` | Ten frozen specifications |
+| `specs/SPEC-0001`–`SPEC-0010` | Ten specifications — 7 at v1.0, 3 still drafts |
 
 **Local only — NOT in the public repository** (listed in `.gitignore`, absent from both the tree and the commit history):
 
@@ -153,10 +153,10 @@ The commits dated 2026-09-26 **are** authored under my real name (`Haihao Xu <ha
 | Outside tools properly credited | Claude Code credited in §2; libraries in §4; ideas in §5. |
 | Prior work clearly disclosed | §3, with a verifiable timeline. |
 | Public GitHub repository | https://github.com/haihaoxu/intentos — public since 2026-07-25. |
-| Supporting materials provided | Ten frozen specs, `BLUEPRINT.md`, `EXECUTION_CONTRACT.md`, `ROADMAP.md`, README, docs site. |
+| Supporting materials provided | Ten specs (7 at v1.0, 3 drafts), `BLUEPRINT.md`, `EXECUTION_CONTRACT.md`, `ROADMAP.md`, README, docs site. |
 | Pitch / demo content | `DEMO_SCRIPT.md` (in this directory) with a reproducible zero-config demo. |
 | Honest conduct | No user, revenue, or adoption figures are claimed that do not exist. §7 of `SUBMISSION.md` reports 2 GitHub stars and zero users. |
 
 ---
 
-*Contact: haihao@intent-os.dev*
+*Contact: haihao.xu@outlook.com*

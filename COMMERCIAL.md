@@ -1,6 +1,13 @@
 # Commercial License
 
-Intent OS is open source under the **AGPLv3** license. If the AGPLv3's requirements don't fit your use case, commercial licenses are available.
+> **Status: intended, not enforced.** Nothing below is implemented as a licence
+> gate. There is no licence check anywhere in the codebase, and
+> `intent-os security policy` and `intent-os audit report` run in the free
+> build. SSO does not exist. This document describes the model the project
+> intends to adopt, not a product you can buy today. The table below is
+> corrected to match what the code actually does.
+
+Intent OS is open source under the **AGPLv3** license.
 
 ## What you get
 
@@ -12,10 +19,10 @@ Intent OS is open source under the **AGPLv3** license. If the AGPLv3's requireme
 | Experience system | ✅ | ✅ |
 | Agent packages (.agent) | ✅ | ✅ |
 | MCP server | ✅ | ✅ |
-| **Governance (policy engine)** | ❌ | ✅ |
-| **Audit reports** | ❌ | ✅ |
-| **SSO / team management** | ❌ | ✅ |
-| **SLA support** | ❌ | ✅ |
+| Governance (policy engine) | ✅ *(ungated — intended to be commercial)* | planned |
+| Audit reports | ✅ *(ungated — intended to be commercial)* | planned |
+| SSO / team management | team management ships free; SSO not built | planned |
+| SLA support | — | planned |
 
 ## Pricing
 

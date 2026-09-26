@@ -20,7 +20,7 @@ intent-os doctor          # What happened? What went wrong? What did it cost?
 intent-os inspect latest  # Every step, every model call, every failure
 ```
 
-> **A note on installing.** Install from the repository, not from PyPI. The published `intentos` 0.15.2 on PyPI dates from July 2026 and predates the fixes described in Section 5.6 — including the one that makes `demo` record a trace at all. Installing from the repository gives you the version this submission describes. The PyPI release has not been superseded because publishing a new version is a separate step I have not taken.
+> **A note on installing.** Install from the repository, not from PyPI. The published `intentos` 0.15.2 on PyPI dates from July 2026 and predates the fixes described in Section 5 — including the one that makes `demo` record a trace at all. Installing from the repository gives you the version this submission describes. The PyPI release has not been superseded because publishing a new version is a separate step I have not taken.
 
 ---
 
@@ -71,25 +71,29 @@ Three commands carry the product:
 | `intent-os inspect latest` | *What happened?* Reconstructs a timeline: goal, steps, model calls, tokens, cost, failure point. |
 | `intent-os doctor` | *What went wrong, and how do I fix it?* Diagnoses the failure and suggests an action. |
 
-The trace format looks like this:
+The trace `demo --auto` produces looks like this (trimmed; timings vary per run):
 
 ```
   Agent Flight Recorder - Execution Trace
-    [OK]  Goal:        refactor-auth-to-jwt
-       Runtime:    anthropic (AnthropicAdapter)
-       Duration:   14,327ms
-       Cost:       $0.0842
-       Tokens:     4,891
-       Error:      Tests failed: 2 passed, 1 failed
 
-    -- Timeline (6 events) --
-    [14:02:01] > START (planner) refactor-auth-to-jwt
-    [14:02:05] > START step=read-files
-    [14:02:09] > INVOKE (adapter) modify-auth -- model=claude-sonnet-4
-    [14:02:27] !! FAIL  run-tests (12713ms) -- reason="test_jwt_verify failed"
+  [!!]  Goal:        refactor-auth-to-jwt
+     Runtime:    anthropic (AnthropicAdapter)
+     Duration:   14327ms
+     Cost:       $0.0842
+     Tokens:     4891
+     Error:      test_jwt_verify failed
+
+  -- Timeline (6 events) --
+
+  [10:05:39] > START (runtime)   refactor-auth-to-jwt  task=plan
+  [10:05:40] > INVOKE (adapter)  read-files            task=read-files
+  [10:05:44] OK DONE  (runtime)  read-files            task=read-files
+  [10:05:47] > INVOKE (adapter)  modify-auth           task=modify-auth
+  [10:05:53] OK DONE  (runtime)  modify-auth           task=modify-auth
+  [10:05:54] !! FAIL  (runtime)  run-tests             task=run-tests
 ```
 
-**Precision about what the demo is.** `intent-os demo --auto` renders the walkthrough above and requires **no API key and no network** — but it is a *scripted tour of the interface*, not a recording of a live run, and it does not persist a trace to the event store. A genuine recorded trace comes from `intent-os proxy start` (observe a real agent) or `intent-os run <manifest> --adapter <ollama|openai|anthropic>` (execute a real capability). I am stating this distinction explicitly because a viewer who runs `demo --auto` and then `inspect latest` will otherwise find no trace and reasonably conclude the tool is broken.
+**Precision about what the demo is.** `intent-os demo --auto` requires **no API key and no network**. The narrative it prints is a *scripted tour of the interface*, not a live capture — but it records a synthetic run to the event store as it goes, attributed to `demo-agent`, so the `inspect latest` it points you at returns a real trace with six events, a cost, and the failing step. A capture of your *own* agent comes from `intent-os proxy start`; a real capability execution comes from `intent-os run <manifest> --adapter <ollama|openai|anthropic>`.
 
 ---
 
@@ -144,7 +148,7 @@ What I actually designed and enforced:
 
 These exist to make "what did the agent do?" answerable *by construction* rather than by careful logging. R3 is why the Flight Recorder works at all: there is no second source of truth to drift from.
 
-**2. Ten frozen specifications.** `specs/SPEC-0001` through `SPEC-0010` — capability manifest, workflow graph, event schema, security model, federated registry, agent context layer. "Frozen" means: implementation conforms to spec, spec does not bend to implementation. The reference runtime is the *first proof* of the spec, not its owner.
+**2. Ten specification documents, written before the code.** `specs/SPEC-0001` through `SPEC-0010` — capability manifest, workflow graph, event schema, security model, federated registry, agent context layer. **Seven carry a v1.0 status; three are still design drafts** (the `ask` command, the federated registry, and the agent context layer). For the frozen ones the rule is: implementation conforms to spec, spec does not bend to implementation, and the reference runtime is the *first proof* of the spec rather than its owner. I state the split rather than the flattering version because the drafts are exactly where the spec-first method has not yet paid off.
 
 **3. A hard product boundary.** The project's firewall: **Intent OS does not standardize intelligence. It standardizes interaction.** It deliberately does *not* specify which model to use, how to write prompts, or how to reason. Every design decision is tested against this. Without it, the project would have drifted into being yet another agent framework.
 
@@ -159,7 +163,7 @@ These exist to make "what did the agent do?" answerable *by construction* rather
 | Non-test modules | 91 |
 | CLI commands | 30 |
 | Frozen specs | 10 |
-| Full suite runtime | 60 seconds |
+| Full suite runtime | 60–70 seconds (Windows, CPU only) |
 
 The suite runs in CI on every push, across Python 3.10, 3.11 and 3.12. I ran it immediately before writing this submission:
 
@@ -169,13 +173,15 @@ The suite runs in CI on every push, across Python 3.10, 3.11 and 3.12. I ran it 
 
 **5. Shipping, not demoing.** It is published to PyPI and installable from the repository. `pip install` works on a machine that isn't mine.
 
-**6. What preparing this submission actually found.** I set out to check whether the project's own claims about itself were true. Eight of them were not. I think this is the most useful thing in the submission, so I have not tidied it up.
+**6. What preparing this submission actually found.** I set out to check whether the project's own claims about itself were true. Nine of them were not. I think this is the most useful thing in the submission, so I have not tidied it up.
 
 *The demo showed a trace it never recorded.* `demo --auto` printed a convincing execution record and wrote nothing to the event store, so the `inspect latest` the README invites you to run next returned "No traces found". The output looked like evidence and was not.
 
 *The test suite had never run.* CI installed from the repository root, where there is no `pyproject.toml`, so the install step failed on every run. The "tests passing" badge in the README was a static image that encoded a number nobody had verified. Three further faults sat behind it: `pytest` appeared in no dependency extra; `all = ["ask", ...]` referenced a sibling extra by name, which PEP 621 does not support, so pip resolved it to an unrelated PyPI package called `ask` and installed a stranger's code; and once the suite finally ran on Linux, 18 tests failed because `parse_manifest` distinguished "a path" from "YAML text" with `Path(source).exists()` — which on POSIX raises `ENAMETOOLONG` for any string longer than a filename, and a manifest always is. Windows returns `False` instead of raising, so it was invisible on the only machine it had ever run on.
 
-*The flight recorder did not record, and could not be read.* Two separate defects. The proxy opened its own `events.db` while every reading command — `inspect`, `doctor`, `event` — opened the shared `intent.db`, so captured agent traffic went somewhere nothing looked; the project's own notes had this logged as technical debt, without noting that it meant the headline feature silently did nothing. Then, once both sides shared one database, `inspect` still found nothing, because it listed traces from `execution_records` and proxy traffic is recorded as events. Fixing that surfaced a third: the renderer read `cost`, `tokens` and `error` outside the branch that assigned them, and a proxy trace is exactly the case where that branch never runs.
+*The flight recorder did not record, and could not be read.* Two separate defects. The proxy opened its own `events.db` while every reading command — `inspect`, `doctor`, `event` — opened the shared `intent.db`, so captured agent traffic went somewhere nothing looked; the project's own notes had this logged as technical debt, without noting that it meant the headline feature silently did nothing. Then, once both sides shared one database, `inspect` still found nothing, because it listed traces from `execution_records` and proxy traffic is recorded as events. Fixing that surfaced a third: the renderer read `cost`, `tokens` and `error` outside the branch that assigned them, and a proxy trace is exactly the case where that branch never runs. A fourth was already there — the timeline header printed twice with the totals stranded between the two — which I only noticed because fixing the first three made me read the output line by line.
+
+*The specification list was overstated.* The submission and `COMMERCIAL.md` both said "ten frozen specifications". Six of the ten are marked Frozen; three are still `Design Draft v0.1`. I had been repeating a claim from a document written alongside the code rather than checking the files. This submission now states the real breakdown, and `COMMERCIAL.md` is corrected in the same change.
 
 *Why I am reporting this rather than the fixes.* A flight recorder whose own test suite reported success from a job that never executed, and whose own capture path wrote to a database nothing read, is a specific and interesting kind of failure: every component worked, and the connections between them did not. That is the failure mode this product exists to make visible. Finding it in my own project, with the tool's own philosophy as the method, is the most honest demonstration of the idea I can offer — and it is why the trace output below is now produced by a path I have actually watched work, rather than one I assumed worked.
 
@@ -197,18 +203,22 @@ All of it is in the public history: the commits dated 2026-09-26, authored `Haih
 | Installable | `pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"` |
 | Runs offline | `intent-os demo --auto` — zero config, no API key |
 | Tested | 919 passing tests, green CI on Python 3.10 / 3.11 / 3.12 |
-| Documented | 10 frozen specs + public docs site |
+| Documented | 10 specs (7 at v1.0, 3 drafts) + public docs site |
 | Licensed | AGPLv3 + commercial terms in `COMMERCIAL.md` |
 
-**Business model — open core.**
+**Business model — open core, not yet enforced.**
 
-| Tier | Price | Includes |
+| Tier | Price | Intended to include |
 |---|---|---|
-| Individual | Free (AGPLv3) | All CLI commands, proxy, tracing, experience system |
-| Team | $99/developer/month | + governance policy engine, audit reports, SSO, team management |
-| Enterprise | Custom | + SLA, custom terms |
+| Individual | Free (AGPLv3) | Everything that exists today |
+| Team | $99/developer/month | Governance, audit reporting, SSO, team management |
+| Enterprise | Custom | SLA, custom terms |
 
-The strategic logic of open core fits this problem specifically: the free tier is *recording* (which benefits from being ubiquitous and trusted), and the paid tier is *governance* (which is what organizations actually pay for — audit trails, policy enforcement, SSO). AGPLv3 also means a company that wants to embed Intent OS in a distributed product must either open-source it or buy the commercial license.
+**What is real, and what is a plan.** Nothing is gated. There is no licence check anywhere in the codebase — I searched — and `intent-os security policy` and `intent-os audit report` both run in the free build. SSO does not exist at all. The paid tier is an intention, not a product, and I am labelling it that way rather than presenting a pricing table as though a customer could buy it today.
+
+I am stating this plainly because the alternative is easy to catch: anyone who installs the free build and runs `intent-os audit report` finds the "commercial" feature working, and would be right to distrust the rest of this document. `COMMERCIAL.md` in the repository carries the same correction.
+
+The strategic logic of open core fits this problem specifically: the free tier is *recording* (which benefits from being ubiquitous and trusted), and the paid tier is *governance* (what organisations actually pay for — audit trails, policy enforcement, SSO). AGPLv3 also means a company that wants to embed Intent OS in a distributed product must either open-source it or buy the commercial licence. That is the argument for the model; the model itself is unbuilt.
 
 **Market.** Every team running agents in production has the same question and no good answer: *what did it do, and what did it cost?* The category is real and growing — which is also the honest risk, addressed next.
 
@@ -240,7 +250,7 @@ I built working infrastructure but have not yet found product-market fit. I am r
 Full detail in [`DISCLOSURE.md`](DISCLOSURE.md). Summary:
 
 - **AI-assisted development.** Built with Claude Code. Implementation was largely machine-generated; architecture, specifications, constraints, and verification are mine. I have not represented it as hand-written.
-- **Prior work, publicly disclosed.** Intent OS was published to a public GitHub repository and to PyPI in July 2026, before this competition. It is not new work created for this submission. `BLUEPRINT.md` and `POSITIONING.md` are in the public repository; `PITCH.md` is a local document from the same period.
+- **Prior work, publicly disclosed.** The Intent OS project was published to a public GitHub repository and to PyPI in July 2026, before this competition — it is not work created for this submission. `BLUEPRINT.md` and `POSITIONING.md` are in the public repository; `PITCH.md` is a local document from the same period. What *is* new is the `submission/` directory and the defect fixes described in Section 5; both are dated 2026-09-26 and authored under my name.
 - **Third-party dependencies.** `pyyaml`, `requests`; optional `openai`, `anthropic` adapters. All standard, all credited.
 - **Third-party ideas.** The POSIX / OCI / Kubernetes historical analogy in `POSITIONING.md` is borrowed framing from those ecosystems and is attributed as such.
 

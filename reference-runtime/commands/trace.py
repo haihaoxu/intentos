@@ -496,17 +496,12 @@ def _print_terminal(data: dict[str, Any], store: Any = None) -> None:
     # Timeline
     timeline = _format_timeline(events)
     if timeline:
-        print(f"  -- Timeline ({len(events)} events) --")
+        noun = "event" if len(events) == 1 else "events"
+        print(f"  -- Timeline ({len(events)} {noun}) --")
         print(f"     Cost:       ${cost:.4f}")
         print(f"     Tokens:     {tokens}")
         if error:
             print(f"     Error:      {error}")
-    print()
-
-    # Timeline
-    timeline = _format_timeline(events)
-    if timeline:
-        print(f"  -- Timeline ({len(events)} events) --")
         print()
         for line in timeline:
             print(line)
