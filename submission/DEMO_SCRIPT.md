@@ -102,17 +102,25 @@ intent-os inspect latest
 
 ### Shot 5 — The actual claim (1:05–1:22)
 
+**Verified working.** `llama3.2:1b` is pulled and this exact pair of commands
+was run end-to-end on 2026-09-26; the model really inferred (18.6 s) and the
+trace really came back from `inspect`.
+
 **On screen:** a clean terminal, then this command and its output.
 
 ```bash
-intent-os run examples/text_summarize.yaml --adapter ollama --input '{"text": "..."}'
+intent-os run examples/text_summarize.yaml --adapter ollama \
+  --input '{"text": "Intent OS records what your AI agent did, why it failed, and what it cost."}'
 intent-os inspect latest
 ```
 
-> ⚠️ **Verify this shot before recording.** It requires a local Ollama model:
-> `ollama pull llama3.2:1b` (1.3 GB, ~15 min on a slow link).
-> If Ollama is unavailable, use a cloud adapter with your own API key instead —
-> the point of the shot is that the trace is *real*, so do not fake it.
+**Expected:** `Runtime: ollama (OllamaAdapter)`, 3 events, and a real summary in
+the output. Cost is `$0.0000` and tokens `0` — correct for a local model, which
+reports neither. Do not "fix" those on screen; say why they are zero.
+
+> The `Duration` field reads `0ms` on this path — the run path does not populate
+> it the way the demo path does. Either narrate around it or trim the shot before
+> that line. Do not edit the output.
 
 **Voiceover:**
 > This is a genuine run, captured from the outside. And that's the part that matters — Intent OS records at the **network boundary**. No SDK. No code changes. No framework assumptions.
