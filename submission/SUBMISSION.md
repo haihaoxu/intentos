@@ -129,7 +129,7 @@ This is what turns a flight recorder from a debugging tool into infrastructure.
 
 I want to be direct about how this was built, because the repository is public and the git history is readable.
 
-**Development method.** This was built with heavy AI-assisted development (Claude Code) across roughly four intensive days in July 2026 — 90 commits. The implementation volume was largely machine-generated. **My contribution was the parts an AI cannot do on its own: the architectural constraints, the specifications, and the verification discipline.**
+**Development method.** Intent OS was built in **four days** — 2026-07-22 to 2026-07-25, 90 commits, and no commits in any other month. It was not a long-running project; it was one sprint. The work was AI-assisted throughout (Claude Code), so the implementation volume was largely machine-generated. **What is mine is the part an AI cannot originate on its own behalf: the architectural constraints, the specifications, the scope decisions, and the verification discipline.**
 
 I consider that honest accounting to be the most important paragraph in this submission, and Section 8 discloses it formally.
 
@@ -196,7 +196,7 @@ All of it is in the public history: the commits dated 2026-09-26, authored `Haih
 |---|---|
 | Installable | `pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"` |
 | Runs offline | `intent-os demo --auto` — zero config, no API key |
-| Tested | 917 passing tests, green CI on Python 3.10 / 3.11 / 3.12 |
+| Tested | 919 passing tests, green CI on Python 3.10 / 3.11 / 3.12 |
 | Documented | 10 frozen specs + public docs site |
 | Licensed | AGPLv3 + commercial terms in `COMMERCIAL.md` |
 
@@ -240,7 +240,7 @@ I built working infrastructure but have not yet found product-market fit. I am r
 Full detail in [`DISCLOSURE.md`](DISCLOSURE.md). Summary:
 
 - **AI-assisted development.** Built with Claude Code. Implementation was largely machine-generated; architecture, specifications, constraints, and verification are mine. I have not represented it as hand-written.
-- **Prior work, publicly disclosed.** Intent OS was published to a public GitHub repository and to PyPI in July 2026, two months before this competition. It is not new work created for this submission. `BLUEPRINT.md` and `POSITIONING.md` are in the public repository; `PITCH.md` is a local document from the same period.
+- **Prior work, publicly disclosed.** Intent OS was written in a single four-day stretch (2026-07-22 to 2026-07-25) and published to a public GitHub repository and to PyPI in the same week. It is not new work created for this submission. There are no commits between 2026-07-25 and 2026-09-26 — the project was dormant, not in development. `BLUEPRINT.md` and `POSITIONING.md` are in the public repository; `PITCH.md` is a local document from the same period.
 - **Third-party dependencies.** `pyyaml`, `requests`; optional `openai`, `anthropic` adapters. All standard, all credited.
 - **Third-party ideas.** The POSIX / OCI / Kubernetes historical analogy in `POSITIONING.md` is borrowed framing from those ecosystems and is attributed as such.
 

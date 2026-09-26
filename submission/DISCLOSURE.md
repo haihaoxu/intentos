@@ -17,7 +17,7 @@ Everything below is stated so that it can be independently verified against the 
 | Item | Disclosure |
 |---|---|
 | AI-assisted development | **Yes — extensive.** Built with Claude Code. (Section 2) |
-| Prior work, pre-dating this competition | **Yes.** Publicly released July 2026, ~2 months before submission. (Section 3) |
+| Prior work, pre-dating this competition | **Yes.** Built in four days, July 2026; published the same week. (Section 3) |
 | Third-party code dependencies | `pyyaml`, `requests`; optional `openai`, `anthropic`. (Section 4) |
 | Third-party ideas / framing | POSIX / OCI / Kubernetes analogy, borrowed and attributed. (Section 5) |
 | Work I claim as mine | Architecture, specifications, constraints, verification. (Section 6) |
@@ -52,25 +52,28 @@ A `CLAUDE.md` session-context file — the working document I used to brief the 
 
 **Intent OS is prior work. It was not created for Creator Colosseum.**
 
-To be precise about what is old and what is new: the *project* — all 47,572 lines, the specs, the architecture, the PyPI package — existed two months before this competition and is submitted as-is. The four commits dated 2026-09-26, and the `submission/` directory itself, are **new work created for this submission**. The commit messages state plainly what each one changes, and the git history distinguishes them by author name.
+To be precise about what is old and what is new: the *project* — all 47,663 lines, the specs, the architecture, the PyPI package — was **built in four days** and is submitted as-is. The commits dated 2026-09-26, and the `submission/` directory itself, are **new work created for this submission**. The commit messages state plainly what each one changes, and the git history distinguishes them by author name.
+
+**On the duration — and why "prior work" does not mean "long-running".** Intent OS was written in a single four-day stretch, 2026-07-22 to 2026-07-25. It was then published and left alone for two months: there are **zero commits between 2026-07-25 and 2026-09-26**. The two-month figure elsewhere in this disclosure is the age of the *publication*, not the length of the work. The development was one sprint, and the git history shows it plainly — `git log --format=%ad --date=format:%Y-%m | sort | uniq -c` returns 90 commits in 2026-07 and 10 in 2026-09, with nothing in August.
 
 **Timeline:**
 
 | Date | Event |
 |---|---|
-| 2026-07-22 → 07-25 | Initial development, 90 commits (prior work) |
-| 2026-07-25 | Public GitHub repository, latest push to `main` |
-| 2026-07 | Published to PyPI as `intentos` |
-| 2026-09-26 | 4 commits: submission directory, demo persistence fix, CI repair, POSIX parser fix (**new work**) |
+| 2026-07-22 → 07-25 | **The whole build.** 90 commits in four days (prior work) |
+| 2026-07-25 | Published: public GitHub repository, `main` pushed |
+| 2026-07 | Released to PyPI as `intentos` |
+| 2026-07-26 → 09-25 | **Dormant. Zero commits.** |
+| 2026-09-26 | Submission directory and eight defect fixes, in the commits dated today (**new work**) |
 | 2026-09-26 | This submission |
 
 **How to verify:**
 
-- **Git history** — the repository is public. `git log` shows 90 commits authored `Intent OS` dated 2026-07-22 through 2026-07-25, all pre-dating this competition, plus 4 commits dated 2026-09-26 authored `Haihao Xu`.
+- **Git history** — the repository is public. `git log` shows 90 commits authored `Intent OS` dated 2026-07-22 through 2026-07-25, all pre-dating this competition, plus the commits dated 2026-09-26 authored `Haihao Xu` — count them with `git log --since=2026-09-26`.
 - **PyPI release dates** — `intentos` has been publicly installable since July 2026: https://pypi.org/project/intentos/
 - **Docs site** — https://haihaoxu.github.io/intentos/ has been live since July 2026.
 
-**The new commits, and why they exist.** Building this submission meant checking the claims the project made about itself. Three of the four commits fix things that were untrue or broken: the `demo` command printed a trace it never recorded; CI had failed on every run since July, meaning the "tests passing" badge had never been verified; and the parser mistook manifest text for a filename on POSIX. None of these change what the product is, and all of them are visible in the diff. I am flagging them because a submission that quietly patches its own record while claiming to disclose everything would be a contradiction.
+**The new commits, and why they exist.** Building this submission meant checking the claims the project made about itself, and eight of them turned out to be false. The commits fix the defects behind those claims: `demo` printed a trace it never recorded; CI had never once executed the test suite, so the "tests passing" badge had never been verified; the proxy wrote captured agent traffic to a database no command read; `inspect` could not list a trace that had no execution record; and the parser mistook manifest text for a filename on POSIX. None of these change what the product is, and all of them are visible in the diff. I am flagging them because a submission that quietly patches its own record while claiming to disclose everything would be a contradiction.
 
 **Pre-existing documents.** These were written during the July development period, before this competition.
 
@@ -141,7 +144,7 @@ I, **Haihao Xu**, am the sole author of Intent OS. The GitHub account `haihaoxu`
 
 **One caveat on the commit record.** The 90 commits from July 2026 are authored under the name **`Intent OS`** rather than `haihaoxu` — a git configuration choice from the initial setup. Their author field therefore does not directly display my name, and a reader of `git log` cannot confirm authorship from it alone.
 
-The four commits dated 2026-09-26 **are** authored under my real name (`Haihao Xu <haihao.xu@outlook.com>`), so the repository history now contains entries that tie my identity to the project and to work I did on it. Repository ownership, the PyPI package, the documentation site, and the commit timestamps remain the corroborating record for the July work.
+The commits dated 2026-09-26 **are** authored under my real name (`Haihao Xu <haihao.xu@outlook.com>`), so the repository history now contains entries that tie my identity to the project and to work I did on it. Repository ownership, the PyPI package, the documentation site, and the commit timestamps remain the corroborating record for the July work.
 
 **My claim of authorship covers:** the concept, the architectural constraints, the specifications, the scope decisions (including what the project deliberately does not do), and the verification standard. It does not extend to claiming hand-authorship of machine-generated implementation code, which is disclosed in Section 2.
 
