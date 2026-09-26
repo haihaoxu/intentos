@@ -40,7 +40,7 @@ A `CLAUDE.md` session-context file — the working document I used to brief the 
 | Docstrings, error messages | Deciding *what to build and what to refuse to build* |
 | Most documentation prose | Verifying the result: running the suite, rejecting what failed |
 
-**What I am not claiming.** I am not claiming to have hand-written 47,572 lines of Python. At 90 commits across four days (2026-07-22 to 2026-07-25), that would be implausible on inspection, and the git history is public.
+**What I am not claiming.** I am not claiming to have hand-written 47,663 lines of Python. At 90 commits across four days (2026-07-22 to 2026-07-25), that would be implausible on inspection, and the git history is public.
 
 **What I am claiming.** The architectural decisions, the constraint system, the specification-first method, and the verification discipline are my work. These are the parts that determine whether a project holds together, and they are the parts an AI cannot originate on its own behalf.
 

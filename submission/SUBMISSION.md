@@ -148,14 +148,14 @@ These exist to make "what did the agent do?" answerable *by construction* rather
 
 **3. A hard product boundary.** The project's firewall: **Intent OS does not standardize intelligence. It standardizes interaction.** It deliberately does *not* specify which model to use, how to write prompts, or how to reason. Every design decision is tested against this. Without it, the project would have drifted into being yet another agent framework.
 
-**4. Verification discipline — 917 tests.** The suite is not decorative:
+**4. Verification discipline — 919 tests.** The suite is not decorative:
 
 | Metric | Value |
 |---|---|
-| Passing tests | **917** (8 skipped, network-dependent) |
-| Test code | 16,420 lines |
-| Production code | ~31,150 lines |
-| Total Python | **47,572 lines** |
+| Passing tests | **919** (8 skipped, network-dependent) |
+| Test code | 16,465 lines |
+| Production code | ~31,200 lines |
+| Total Python | **47,663 lines** |
 | Non-test modules | 91 |
 | CLI commands | 30 |
 | Frozen specs | 10 |
@@ -164,19 +164,27 @@ These exist to make "what did the agent do?" answerable *by construction* rather
 The suite runs in CI on every push, across Python 3.10, 3.11 and 3.12. I ran it immediately before writing this submission:
 
 ```
-917 passed, 8 skipped, 10 deselected in 60.09s (0:01:00)
+919 passed, 8 skipped, 10 deselected in 70.40s (0:01:10)
 ```
 
 **5. Shipping, not demoing.** It is published to PyPI and installable from the repository. `pip install` works on a machine that isn't mine.
 
-**6. Finding a two-month-old bug that green tests were hiding.** Preparing this submission, I noticed CI had been failing since July and that the published "tests passing" badge was a static image nobody had verified. Chasing it down turned up four separate faults, one of which was in the product rather than the pipeline:
+**6. What preparing this submission actually found.** I set out to check whether the project's own claims about itself were true. Eight of them were not. I think this is the most useful thing in the submission, so I have not tidied it up.
 
-- CI installed from the repository root, where there is no `pyproject.toml` — so the install step had failed on every run and **the tests had never actually executed**. The badge was never true.
-- `pytest` appeared in no dependency extra.
-- `all = ["ask", ...]` referenced a sibling extra by name, which PEP 621 does not support; pip resolved it to an unrelated PyPI package called `ask` and installed a stranger's code.
-- Once the suite finally ran on Linux, 18 tests failed. `parse_manifest` and `parse_workflow_yaml` accept either a file path or raw YAML, and told them apart with `Path(source).exists()` — which on POSIX raises `ENAMETOOLONG` for any string longer than a filename. A manifest is always longer than a filename. Windows returns `False` instead of raising, so this was invisible on the only machine it had ever been run on.
+*The demo showed a trace it never recorded.* `demo --auto` printed a convincing execution record and wrote nothing to the event store, so the `inspect latest` the README invites you to run next returned "No traces found". The output looked like evidence and was not.
 
-That last one is the one I would point at. The project's whole thesis is *"you should be able to see what actually happened"*, and its own test suite had been reporting success from a CI job that never ran, on one platform, hiding a defect in the parser at the centre of the system. Fixing it required replacing the check with one that tolerates OS-level failure, plus regression tests. CI is green across all three Python versions for the first time.
+*The test suite had never run.* CI installed from the repository root, where there is no `pyproject.toml`, so the install step failed on every run since July. The "tests passing" badge in the README was a static image that encoded a number nobody had verified. Three further faults sat behind it: `pytest` appeared in no dependency extra; `all = ["ask", ...]` referenced a sibling extra by name, which PEP 621 does not support, so pip resolved it to an unrelated PyPI package called `ask` and installed a stranger's code; and once the suite finally ran on Linux, 18 tests failed because `parse_manifest` distinguished "a path" from "YAML text" with `Path(source).exists()` — which on POSIX raises `ENAMETOOLONG` for any string longer than a filename, and a manifest always is. Windows returns `False` instead of raising, so it was invisible on the only machine it had ever run on.
+
+*The flight recorder did not record, and could not be read.* Two separate defects. The proxy opened its own `events.db` while every reading command — `inspect`, `doctor`, `event` — opened the shared `intent.db`, so captured agent traffic went somewhere nothing looked; the project's own notes had this logged as technical debt, without noting that it meant the headline feature silently did nothing. Then, once both sides shared one database, `inspect` still found nothing, because it listed traces from `execution_records` and proxy traffic is recorded as events. Fixing that surfaced a third: the renderer read `cost`, `tokens` and `error` outside the branch that assigned them, and a proxy trace is exactly the case where that branch never runs.
+
+*Why I am reporting this rather than the fixes.* A flight recorder whose own test suite reported success from a job that never executed, and whose own capture path wrote to a database nothing read, is a specific and interesting kind of failure: every component worked, and the connections between them did not. That is the failure mode this product exists to make visible. Finding it in my own project, with the tool's own philosophy as the method, is the most honest demonstration of the idea I can offer — and it is why the trace output below is now produced by a path I have actually watched work, rather than one I assumed worked.
+
+All of it is in the public history: the commits dated 2026-09-26, authored `Haihao Xu`, with the reasoning in the messages. CI is green across all three Python versions for the first time. Local suite:
+
+```
+919 passed, 8 skipped, 10 deselected in 70.40s (0:01:10)
+```
+
 
 ---
 
