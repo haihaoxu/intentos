@@ -146,26 +146,35 @@ These exist to make "what did the agent do?" answerable *by construction* rather
 
 **3. A hard product boundary.** The project's firewall: **Intent OS does not standardize intelligence. It standardizes interaction.** It deliberately does *not* specify which model to use, how to write prompts, or how to reason. Every design decision is tested against this. Without it, the project would have drifted into being yet another agent framework.
 
-**4. Verification discipline — 912 tests.** The suite is not decorative:
+**4. Verification discipline — 917 tests.** The suite is not decorative:
 
 | Metric | Value |
 |---|---|
-| Passing tests | **912** (8 skipped, network-dependent) |
-| Test code | 16,353 lines |
-| Production code | ~31,000 lines |
-| Total Python | **47,407 lines** |
+| Passing tests | **917** (8 skipped, network-dependent) |
+| Test code | 16,420 lines |
+| Production code | ~31,150 lines |
+| Total Python | **47,572 lines** |
 | Non-test modules | 91 |
 | CLI commands | 30 |
 | Frozen specs | 10 |
-| Full suite runtime | 63 seconds |
+| Full suite runtime | 60 seconds |
 
-I ran the suite immediately before writing this submission:
+The suite runs in CI on every push, across Python 3.10, 3.11 and 3.12. I ran it immediately before writing this submission:
 
 ```
-912 passed, 8 skipped, 10 deselected in 62.99s (0:01:02)
+917 passed, 8 skipped, 10 deselected in 60.09s (0:01:00)
 ```
 
 **5. Shipping, not demoing.** It is on PyPI. `pip install intentos` works on a machine that isn't mine.
+
+**6. Finding a two-month-old bug that green tests were hiding.** Preparing this submission, I noticed CI had been failing since July and that the published "tests passing" badge was a static image nobody had verified. Chasing it down turned up four separate faults, one of which was in the product rather than the pipeline:
+
+- CI installed from the repository root, where there is no `pyproject.toml` — so the install step had failed on every run and **the tests had never actually executed**. The badge was never true.
+- `pytest` appeared in no dependency extra.
+- `all = ["ask", ...]` referenced a sibling extra by name, which PEP 621 does not support; pip resolved it to an unrelated PyPI package called `ask` and installed a stranger's code.
+- Once the suite finally ran on Linux, 18 tests failed. `parse_manifest` and `parse_workflow_yaml` accept either a file path or raw YAML, and told them apart with `Path(source).exists()` — which on POSIX raises `ENAMETOOLONG` for any string longer than a filename. A manifest is always longer than a filename. Windows returns `False` instead of raising, so this was invisible on the only machine it had ever been run on.
+
+That last one is the one I would point at. The project's whole thesis is *"you should be able to see what actually happened"*, and its own test suite had been reporting success from a CI job that never ran, on one platform, hiding a defect in the parser at the centre of the system. Fixing it required replacing the check with one that tolerates OS-level failure, plus regression tests. CI is green across all three Python versions for the first time.
 
 ---
 
@@ -177,7 +186,7 @@ I ran the suite immediately before writing this submission:
 |---|---|
 | Installable | `pip install intentos` |
 | Runs offline | `intent-os demo --auto` — zero config, no API key |
-| Tested | 912 passing tests |
+| Tested | 917 passing tests, green CI on Python 3.10 / 3.11 / 3.12 |
 | Documented | 10 frozen specs + public docs site |
 | Licensed | AGPLv3 + commercial terms in `COMMERCIAL.md` |
 
