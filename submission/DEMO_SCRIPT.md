@@ -12,7 +12,7 @@ Record the terminal at a large font size (16pt+). The trace output is the produc
 Run this **the day before recording** and confirm every line succeeds:
 
 ```bash
-pip install intentos
+pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"
 intent-os demo --auto
 intent-os inspect latest
 ```
@@ -51,7 +51,7 @@ FAILED tests/test_auth.py::test_jwt_verify
 **On screen:**
 
 ```bash
-pip install intentos
+pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"
 intent-os demo --auto
 ```
 
@@ -132,11 +132,11 @@ intent-os inspect latest
 
 ### Shot 6 — Close (1:22–1:30)
 
-**On screen:**
+**On screen:** keep this short — a long pinned URL does not read at a glance.
 
 ```
-pip install intentos
 github.com/haihaoxu/intentos
+pip install "…intentos#subdirectory=reference-runtime"
 AGPLv3
 ```
 

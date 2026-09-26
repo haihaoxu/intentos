@@ -15,6 +15,10 @@
 ---
 
 ```bash
+# Recommended — installs the current source, including fixes not yet on PyPI
+pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"
+
+# Or from PyPI (v0.15.2, July 2026 — predates those fixes)
 pip install intentos
 
 # What happened? What went wrong? What did it cost?

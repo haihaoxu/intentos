@@ -2,10 +2,10 @@
 
 **Entrant:** Haihao Xu (徐傲仓) — solo
 **Repository:** https://github.com/haihaoxu/intentos
-**Package:** `pip install intentos`
+**Install:** `pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"`
 **Docs:** https://haihaoxu.github.io/intentos/
 **License:** AGPLv3 (open source) + commercial license
-**Version submitted:** v0.15.2
+**Version submitted:** v0.15.2 (source); PyPI carries v0.15.2 from July 2026
 
 ---
 
@@ -14,11 +14,13 @@
 **Intent OS is an open-source flight recorder for AI agents — it shows you exactly what your agent did, why it failed, and what it cost.**
 
 ```bash
-pip install intentos
+pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"
 
 intent-os doctor          # What happened? What went wrong? What did it cost?
 intent-os inspect latest  # Every step, every model call, every failure
 ```
+
+> **A note on installing.** Install from the repository, not from PyPI. The published `intentos` 0.15.2 on PyPI dates from July 2026 and predates the fixes described in Section 5.6 — including the one that makes `demo` record a trace at all. Installing from the repository gives you the version this submission describes. The PyPI release has not been superseded because publishing a new version is a separate step I have not taken.
 
 ---
 
@@ -165,7 +167,7 @@ The suite runs in CI on every push, across Python 3.10, 3.11 and 3.12. I ran it 
 917 passed, 8 skipped, 10 deselected in 60.09s (0:01:00)
 ```
 
-**5. Shipping, not demoing.** It is on PyPI. `pip install intentos` works on a machine that isn't mine.
+**5. Shipping, not demoing.** It is published to PyPI and installable from the repository. `pip install` works on a machine that isn't mine.
 
 **6. Finding a two-month-old bug that green tests were hiding.** Preparing this submission, I noticed CI had been failing since July and that the published "tests passing" badge was a static image nobody had verified. Chasing it down turned up four separate faults, one of which was in the product rather than the pipeline:
 
@@ -184,7 +186,7 @@ That last one is the one I would point at. The project's whole thesis is *"you s
 
 | Claim | Verification |
 |---|---|
-| Installable | `pip install intentos` |
+| Installable | `pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"` |
 | Runs offline | `intent-os demo --auto` — zero config, no API key |
 | Tested | 917 passing tests, green CI on Python 3.10 / 3.11 / 3.12 |
 | Documented | 10 frozen specs + public docs site |
@@ -269,5 +271,5 @@ That instinct — that the missing piece is usually the layer nobody is building
 **Try it in 30 seconds, no API key required:**
 
 ```bash
-pip install intentos && intent-os demo --auto
+pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime" && intent-os demo --auto
 ```

@@ -243,7 +243,7 @@ def cmd_demo(args: Any) -> None:
         _print_slow("    intent-os inspect latest")
         print()
 
-    _print_slow("  Install:  pip install intentos")
+    _print_slow("  Repo:     https://github.com/haihaoxu/intentos")
     _print_slow("  Run:      intent-os demo --auto")
     _print_slow("  Docs:     https://haihaoxu.github.io/intentos/")
     print()
