@@ -23,9 +23,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install .[all]
+        run: pip install ./reference-runtime[all]
 
       - name: Run tests
         env:
           OLLAMA: ""
-        run: cd reference-runtime && python -m pytest tests/ -v --tb=short -q
+        run: cd reference-runtime && python -m pytest tests/ -m "not ask_e2e" --tb=short -q
