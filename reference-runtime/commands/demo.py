@@ -11,7 +11,11 @@ from __future__ import annotations
 
 import sys
 import time
+from datetime import timedelta
 from typing import Any
+
+DEMO_AGENT_ID = "demo-agent"
+DEMO_AGENT_NAME = "demo-agent"
 
 
 def _print_slow(text: str, delay: float = 0.003) -> None:
@@ -27,6 +31,74 @@ def _section(title: str) -> None:
     print(f"   {title}")
     print(f"  {'=' * 50}")
     print()
+
+
+def _persist_demo_trace() -> str | None:
+    """Record the demo execution into the Event Store.
+
+    The narrative this command prints is a scripted tour of the interface.
+    Without persisting a real record, a viewer who runs
+    ``intent-os inspect latest`` straight afterwards finds an empty store and
+    reasonably concludes the tool is broken.
+
+    The run written here is synthetic and attributed to ``demo-agent`` so it
+    is never mistaken for a genuine capture of the viewer's own agent.
+    """
+    try:
+        from commands.helpers import get_event_store
+        from core.models import ExecutionStatus
+        from core.recorder import ExecutionRecorder
+
+        trace_id = "demo-refactor-auth-to-jwt"
+        rec = ExecutionRecorder(trace_id)
+
+        rec.record_started("plan", "refactor-auth-to-jwt", input_ref="auth-module")
+        rec.record_invoked("read-files", "read-files", "anthropic", "claude-sonnet-4")
+        rec.record_completed(
+            "read-files", "read-files", 3241, {"input": 2451, "output": 0}, 0.0
+        )
+        rec.record_invoked("modify-auth", "modify-auth", "anthropic", "claude-sonnet-4")
+        rec.record_completed(
+            "modify-auth", "modify-auth", 5824, {"input": 1400, "output": 1040}, 0.0842
+        )
+        rec.record_failed(
+            "run-tests",
+            "run-tests",
+            "TestFailure",
+            "test_jwt_verify failed",
+        )
+
+        record = rec.build_record(
+            manifest_name="refactor-auth-to-jwt",
+            manifest_version="1.0.0",
+            runtime_id="anthropic",
+            adapter="AnthropicAdapter",
+            adapter_version="1.0.0",
+            input_data={"module": "auth", "target": "jwt"},
+            output_data=None,
+            status=ExecutionStatus.FAILURE,
+            error="test_jwt_verify failed",
+        )
+        record.total_cost_usd = 0.0842
+        record.total_tokens = 4891
+
+        # Spread event timestamps across the run so the recorded duration
+        # matches the narrative instead of collapsing to 0ms.
+        offsets_s = [0.0, 1.0, 4.241, 8.0, 13.824, 14.327]
+        base = record.events[0].timestamp
+        for evt, offset in zip(record.events, offsets_s):
+            evt.timestamp = base + timedelta(seconds=offset)
+        record.total_latency_ms = 14327.0
+
+        store = get_event_store()
+        store.save_events_batch(record.events)
+        store.save_execution_record(
+            record, agent_id=DEMO_AGENT_ID, agent_name=DEMO_AGENT_NAME
+        )
+        return trace_id
+    except Exception as exc:  # a failed demo must not break the tour
+        print(f"  [warn] could not persist demo trace: {exc}")
+        return None
 
 
 def cmd_demo(args: Any) -> None:
@@ -86,6 +158,8 @@ def cmd_demo(args: Any) -> None:
 
     # ── Show the trace ──
     _section("Agent Flight Recorder - Trace")
+
+    trace_id = _persist_demo_trace()
 
     _print_slow("  $ intent-os inspect latest")
     print()
@@ -163,9 +237,15 @@ def cmd_demo(args: Any) -> None:
     _print_slow("  Your AI coding agent is a black box.")
     _print_slow("  Agent Flight Recorder opens it.")
     print()
+    if trace_id:
+        print("  This run was recorded. Inspect it for real:")
+        print()
+        _print_slow("    intent-os inspect latest")
+        print()
+
     _print_slow("  Install:  pip install intentos")
     _print_slow("  Run:      intent-os demo --auto")
-    _print_slow("  Docs:     https://intent-os.org")
+    _print_slow("  Docs:     https://haihaoxu.github.io/intentos/")
     print()
 
     if not auto:

@@ -27,7 +27,7 @@ Intent OS is open source under the **AGPLv3** license. If the AGPLv3's requireme
 
 ## How to purchase
 
-Email: **haihao@intent-os.dev**
+Email: **haihao.xu@outlook.com**
 
 Include:
 - Number of developers
