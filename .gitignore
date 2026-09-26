@@ -18,8 +18,7 @@ build/
 venv/
 
 # Submission scratch — local verification artifacts, not deliverables
-submission/_demo_home*/
-submission/_ollama_pull.log
+submission/_*
 
 # AI session context & strategic planning — not for public repo
 CLAUDE.md
