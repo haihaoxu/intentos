@@ -136,7 +136,7 @@ class OpenRouterAdapter(AdapterBase):
             tool_choice={"type": "function", "function": {"name": manifest.name}},
             max_tokens=1024,  # Limit token usage for free-tier compatibility
             extra_headers={
-                "HTTP-Referer": "https://intent-os.org",
+                "HTTP-Referer": "https://github.com/haihaoxu/intentos",
                 "X-Title": "Intent OS Reference Runtime",
             },
         )

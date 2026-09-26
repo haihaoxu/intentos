@@ -2,7 +2,7 @@ kind: Capability
 metadata:
   name: code_review
   version: 2.1.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Analyzes source code for bugs, security vulnerabilities, style issues, and provides a structured review report"
   tags:
     - code-analysis

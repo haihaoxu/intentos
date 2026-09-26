@@ -30,7 +30,7 @@ kind: Capability
 metadata:
   name: hello_world
   version: 1.0.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "A simple hello world capability that greets the user"
 
 spec:
@@ -72,7 +72,7 @@ spec:
 |---|---|---|
 | `name` | `hello_world` | A unique identifier for the capability. Convention is `{domain}-{action}` (e.g., `web-search`, `text-summarize`). Here the name is simply `hello_world` since it is a teaching example. |
 | `version` | `1.0.0` | Semantic versioning (`MAJOR.MINOR.PATCH`). MAJOR for breaking interface changes, MINOR for additive changes, PATCH for bug fixes. This field is **required**. |
-| `publisher` | `intent-os.org` | The entity that published this capability. Uses reverse-domain or org-based naming. This field is **recommended** but not required. |
+| `publisher` | `haihaoxu.github.io` | The entity that published this capability. Uses reverse-domain or org-based naming. This field is **recommended** but not required. |
 | `description` | `"A simple hello world capability that greets the user"` | A human-readable summary of what the capability does. Shown in registries, listings, and discovery tools. This field is **recommended** but not required. |
 
 ### `spec.input`
@@ -181,7 +181,7 @@ security:
 
 In plain English, this Manifest says:
 
-> "I am a capability called `hello_world` version 1.0.0, published by `intent-os.org`. I take an optional name (defaulting to 'World') and return a greeting and a message. I work with gpt-4o or claude-sonnet-4. I am low risk and make no network calls."
+> "I am a capability called `hello_world` version 1.0.0, published by `haihaoxu.github.io`. I take an optional name (defaulting to 'World') and return a greeting and a message. I work with gpt-4o or claude-sonnet-4. I am low risk and make no network calls."
 
 ---
 

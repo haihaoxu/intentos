@@ -166,7 +166,7 @@ peers:
     public_key: "MCowBQYDK2VwAyEA..."
     trust_level: query
     endpoints:
-      query: "https://community.intent-os.org/query"
+      query: "https://registry.example.com/query"
     last_synced: null
 
   - registry_id: "def-456"

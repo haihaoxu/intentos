@@ -2,7 +2,7 @@ kind: Capability
 metadata:
   name: translate
   version: 1.2.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Translates text between natural languages with optional source language auto-detection"
   tags:
     - nlp

@@ -7,7 +7,7 @@ kind: Capability
 metadata:
   name: sentiment_analyze
   version: 1.0.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Analyzes the emotional tone of text"
   tags: [nlp, sentiment, text-analysis, emotions]
 ```

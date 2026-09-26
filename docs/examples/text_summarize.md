@@ -7,7 +7,7 @@ kind: Capability
 metadata:
   name: text_summarize
   version: 1.0.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Summarize text content into a concise summary with key points"
   tags: [nlp, summarization, text-analysis]
 ```

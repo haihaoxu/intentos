@@ -44,7 +44,7 @@ kind: Capability
 metadata:
   name: translate              # kebab-case identifier
   version: 1.2.0               # semantic version
-  publisher: intent-os.org     # publisher identifier
+  publisher: haihaoxu.github.io     # publisher identifier
   description: "Translates text between natural languages"
   tags: [nlp, translation]     # search tags
 

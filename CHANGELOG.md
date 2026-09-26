@@ -4,6 +4,59 @@ All notable changes to Intent OS are documented here.
 
 ---
 
+## Unreleased (2026-09-26)
+
+### Correctness — defects found by checking the project's own claims
+
+Every item below was a claim the project made about itself that was not true.
+Each fix is a separate commit; the messages carry the reasoning.
+
+- **The demo recorded nothing.** `demo --auto` printed a convincing execution
+  trace and wrote nothing to the event store, so the `inspect latest` the
+  README directs you to next returned "No traces found". It now records a
+  synthetic run attributed to `demo-agent`, with event timestamps spread so
+  the stored duration matches what it prints.
+- **CI had never run.** The install step used `pip install .[all]` from the
+  repository root, where there is no `pyproject.toml` — it lives in
+  `reference-runtime/`. The step failed on every run, so the test suite had
+  never executed and the README's "tests passing" badge had never been
+  verified. `pytest` was also absent from every dependency extra, and
+  `all = ["ask", ...]` referenced a sibling extra by name — which PEP 621 does
+  not support — so pip resolved it to the unrelated PyPI package `ask` and
+  installed a stranger's code.
+- **Parsing broke on POSIX.** `parse_manifest` and `parse_workflow_yaml`
+  accept either a path or raw YAML and distinguished them with
+  `Path(source).exists()`, which raises `OSError(ENAMETOOLONG)` on POSIX for
+  any string longer than a filename — and a manifest always is. Windows
+  returns `False` instead, so it was invisible locally. This accounted for all
+  18 Linux test failures; the registry and `ask` failures were downstream.
+- **The proxy recorded where nothing read.** `proxy/tracer.py` opened its own
+  `events.db` while every reading command opens the unified `intent.db`.
+  `get_all_trace_ids()` then queried `execution_records` alone, so proxy
+  traffic — recorded as events — could not be listed even once both sides
+  shared a database. Fixing that surfaced an `UnboundLocalError`: the renderer
+  read `cost`, `tokens` and `error` outside the branch that assigns them, and
+  a trace without an execution record is exactly that case.
+- **`inspect` printed the timeline header twice**, with the totals stranded
+  between the two copies.
+
+### Corrected claims
+
+- **"Ten frozen specifications"** was wrong. Six of the ten are marked Frozen;
+  three are still `Design Draft v0.1`.
+- **`COMMERCIAL.md` sold features that are not gated.** Nothing is gated:
+  there is no licence check in the codebase, `security policy` and
+  `audit report` run in the free build, and SSO does not exist. The paid tier
+  is now labelled as an intention rather than a product.
+- **Domain references.** `docs/CNAME` declared `intent-os.org` as the GitHub
+  Pages custom domain, for a domain the project does not own — which would let
+  anyone who registers it serve this site. The CNAME is removed; the site
+  serves from `haihaoxu.github.io/intentos/`. Publisher identifiers in
+  manifests, the `mkdocs.yml` site URL and the OpenRouter attribution header
+  are updated to point at locations the project controls.
+
+---
+
 ## v0.15.0 (2026-07-24)
 
 ### Code Hygiene — Comprehensive Audit Fixes

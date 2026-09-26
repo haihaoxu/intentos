@@ -72,7 +72,7 @@ spec:
 metadata:
   name: text_summarize
   version: 1.0.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   digest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   description: "Summarize text content into key points"
   tags: ["nlp", "summarization", "text"]

@@ -2,7 +2,7 @@ kind: Capability
 metadata:
   name: image_analyze
   version: 1.0.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Analyzes images from a URL, returning a natural-language description, relevant tags, and optional confidence scores"
   tags:
     - vision

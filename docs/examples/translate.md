@@ -7,7 +7,7 @@ kind: Capability
 metadata:
   name: translate
   version: 1.2.0
-  publisher: intent-os.org
+  publisher: haihaoxu.github.io
   description: "Translates text between natural languages"
   tags: [nlp, translation, i18n, localization, language]
 ```
