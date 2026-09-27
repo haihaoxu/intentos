@@ -1,6 +1,6 @@
 # Intent OS — Creator Colosseum Submission
 
-**Entrant:** Haihao Xu (徐傲仓) — solo
+**Entrant:** Haihao Xu — solo
 **Repository:** https://github.com/haihaoxu/intentos
 **Install:** `pip install "git+https://github.com/haihaoxu/intentos#subdirectory=reference-runtime"`
 **Docs:** https://haihaoxu.github.io/intentos/

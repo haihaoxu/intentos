@@ -1,6 +1,6 @@
 # Disclosure Statement — Intent OS
 
-**Entrant:** Haihao Xu (徐傲仓) — GitHub: [@haihaoxu](https://github.com/haihaoxu)
+**Entrant:** Haihao Xu — GitHub: [@haihaoxu](https://github.com/haihaoxu)
 **Submission:** Creator Colosseum, 2026
 
 This document satisfies the competition's **Originality** requirements:
