@@ -498,10 +498,13 @@ def _print_terminal(data: dict[str, Any], store: Any = None) -> None:
     if timeline:
         noun = "event" if len(events) == 1 else "events"
         print(f"  -- Timeline ({len(events)} {noun}) --")
-        print(f"     Cost:       ${cost:.4f}")
-        print(f"     Tokens:     {tokens}")
-        if error:
-            print(f"     Error:      {error}")
+        # A record already printed these above; repeating them here made the
+        # flagship output read as though it had said everything twice.
+        if record is None:
+            print(f"     Cost:       ${cost:.4f}")
+            print(f"     Tokens:     {tokens}")
+            if error:
+                print(f"     Error:      {error}")
         print()
         for line in timeline:
             print(line)
