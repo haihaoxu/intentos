@@ -320,11 +320,8 @@ def _print_replay_readiness(record: dict[str, Any] | None, events: list[dict[str
     if not has_events:
         missing.append("events")
 
-    trace_id = record.get("trace_id", "")[:12]
-
     if not missing:
-        print(f"  Replay:      This execution is replayable.")
-        print(f"               Run: intent-os replay {trace_id}")
+        print("  Replay:      Replay-ready -- input, output and events all captured.")
     else:
         print(f"  Replay:      Not replayable -- missing: {', '.join(missing)}")
         print(f"               Ensure input, output, and event data are captured.")
