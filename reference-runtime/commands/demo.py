@@ -189,7 +189,9 @@ def cmd_demo(args: Any) -> None:
     ]
 
     for line in trace_lines:
-        _print_slow(f"  {line}" if line.startswith("  ") else line, delay=0.002)
+        # Printed verbatim: the entries already carry the indentation `inspect`
+        # uses, so the demo and the read-back line up character for character.
+        _print_slow(line, delay=0.002)
         time.sleep(0.04)
 
     print()
